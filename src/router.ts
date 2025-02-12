@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createProduct, getProductById, getProducts } from "./handlers/product";
+import { createProduct, deleteProduct, getProductById, getProducts, updateAvailability, updateProduct } from "./handlers/product";
 import { check, validationResult, body, param } from "express-validator";
 import { handleInputErrors } from "./middleware";
 
@@ -11,9 +11,9 @@ const router = Router();
 router.get('/', getProducts);
 
 // GET PRODUCT BY ID
-router.get('/:id', 
+router.get('/:id',
     param('id')
-    .isInt().withMessage('ID not valid, insert a number'),
+        .isInt().withMessage('ID not valid, insert a number'),
     handleInputErrors,
     getProductById);
 
@@ -31,16 +31,33 @@ router.post('/',
     createProduct);
 
 
-router.put('/', (req, res) => {
-    res.json('From put');
-})
+// UPDATE A PRODUCT
 
-router.patch('/', (req, res) => {
-    res.json('From patch');
-})
+router.put('/:id',
+    param('id')
+        .isInt().withMessage('ID not valid, insert a number'),
+    body('name')
+        .notEmpty()
+        .withMessage('Product name can not be empty'),
+    body('price')
+        .isNumeric().withMessage('Should be a number')
+        .notEmpty().withMessage('Price quantity can not be empty')
+        .custom(value => value > 0).withMessage('Price not valid'),
+    body('availability')
+        .isBoolean().withMessage('Value for availability is not valid'),
+    handleInputErrors,
+    updateProduct);
 
-router.delete('/', (req, res) => {
-    res.json('From delete');
-})
+router.patch('/:id',
+    param('id')
+        .isInt().withMessage('ID not valid, insert a number'),
+    handleInputErrors,
+    updateAvailability);
+
+router.delete('/:id',
+    param('id')
+        .isInt().withMessage('ID not valid, insert a number'),
+    handleInputErrors,
+    deleteProduct);
 
 export default router;
