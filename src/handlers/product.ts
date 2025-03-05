@@ -36,9 +36,12 @@ export const getProductById = async (req: Request, res: Response) => {
 
 export const createProduct = async (req: Request, res: Response) => {
 
-    const product = await Product.create(req.body);
-
-    res.json({ data: product });
+    try {
+        const product = await Product.create(req.body);
+        res.status(201).json({ data: product });
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 export const updateProduct = async (req: Request, res: Response) => {
@@ -90,7 +93,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
     }
 
     await product.destroy();
-    res.json({data: 'Product removed'});
+    res.json({ data: 'Product removed' });
 
 }
 

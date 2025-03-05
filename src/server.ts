@@ -6,7 +6,6 @@ async function connectDB() {
     try {
         await db.authenticate();
         db.sync();
-        console.log('database connected :)');
     } catch (error) {
         console.log(error);
         console.log('There was an error connecting to the dababase');
@@ -23,6 +22,12 @@ server.use(express.json());
 // routing
 
 server.use('/api/products', router);
+
+server.get('/api', (req, res) => {
+    res.json({
+        msg: 'From API'
+    })
+})
 
 
 
