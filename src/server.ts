@@ -1,34 +1,27 @@
-import express from 'express';
-import router from './router';
-import db from './config/db';
+import express from 'express' 
+import colors from 'colors'
+import router  from './router'
+import db from './config/db'
 
-async function connectDB() {
+// Conectar a base de datos
+export async function connectDB() {
     try {
-        await db.authenticate();
-        db.sync();
+        await db.authenticate()
+        db.sync()
+        console.log( colors.blue( 'Connected to DB :)'))
     } catch (error) {
-        console.log(error);
-        console.log('There was an error connecting to the dababase');
+        // console.log(error)
+        console.log( colors.red.bold('There was an error connecting to DB'))
     }
 }
 
 connectDB();
 
-const server = express();
+const server = express()
 
-// reading json responses
-server.use(express.json());
+// Read data form
+server.use(express.json())
 
-// routing
+server.use('/api/products', router)
 
-server.use('/api/products', router);
-
-server.get('/api', (req, res) => {
-    res.json({
-        msg: 'From API'
-    })
-})
-
-
-
-export default server;
+export default server

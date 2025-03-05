@@ -1,63 +1,54 @@
-import { Router } from "express";
-import { createProduct, deleteProduct, getProductById, getProducts, updateAvailability, updateProduct } from "./handlers/product";
-import { check, validationResult, body, param } from "express-validator";
-import { handleInputErrors } from "./middleware";
+import { Router } from 'express'
+import { body, param } from 'express-validator'
+import { createProduct, deleteProduct, getProductById, getProducts, updateAvailability, updateProduct } from './handlers/product'
+import { handleInputErrors } from './middleware'
 
+const router = Router()
 
-
-const router = Router();
-
-// GET ALL PRODUCTS
-router.get('/', getProducts);
-
-// GET PRODUCT BY ID
-router.get('/:id',
-    param('id')
-        .isInt().withMessage('ID not valid, insert a number'),
+// Routing
+router.get('/', getProducts)
+router.get('/:id', 
+    param('id').isInt().withMessage('ID is not valid'),
     handleInputErrors,
-    getProductById);
+    getProductById
+)
 
-// CREATE ONE PRODUCT
-router.post('/',
-    //validation
+router.post('/', 
+    // Validación
     body('name')
-        .notEmpty()
-        .withMessage('Product name can not be empty'),
+        .notEmpty().withMessage('Product name can not be empty'),
     body('price')
-        .isNumeric().withMessage('Should be a number')
-        .notEmpty().withMessage('Price quantity can not be empty')
-        .custom(value => value > 0).withMessage('Price not valid'),
+        .isNumeric().withMessage('Value is not valid')
+        .notEmpty().withMessage('Product price can not be empty')
+        .custom(value => value > 0).withMessage('Price is not valid'),
     handleInputErrors,
-    createProduct);
+    createProduct
+)
 
-
-// UPDATE A PRODUCT
-
-router.put('/:id',
-    param('id')
-        .isInt().withMessage('ID not valid, insert a number'),
+router.put('/:id', 
+    param('id').isInt().withMessage('ID is not valid'),
     body('name')
-        .notEmpty()
-        .withMessage('Product name can not be empty'),
+        .notEmpty().withMessage('Product name can not be empty'),
     body('price')
-        .isNumeric().withMessage('Should be a number')
-        .notEmpty().withMessage('Price quantity can not be empty')
-        .custom(value => value > 0).withMessage('Price not valid'),
+        .isNumeric().withMessage('Value is not valid')
+        .notEmpty().withMessage('Product price can not be empty')
+        .custom(value => value > 0).withMessage('Price is not valid'),
     body('availability')
         .isBoolean().withMessage('Value for availability is not valid'),
     handleInputErrors,
-    updateProduct);
+    updateProduct
+)
 
-router.patch('/:id',
-    param('id')
-        .isInt().withMessage('ID not valid, insert a number'),
+router.patch('/:id', 
+    param('id').isInt().withMessage('ID is not valid'),
     handleInputErrors,
-    updateAvailability);
+    updateAvailability
+)
 
-router.delete('/:id',
-    param('id')
-        .isInt().withMessage('ID not valid, insert a number'),
+router.delete('/:id', 
+    param('id').isInt().withMessage('ID is not valid'),
     handleInputErrors,
-    deleteProduct);
+    deleteProduct
+)
 
-export default router;
+export default router
